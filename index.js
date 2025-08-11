@@ -29,16 +29,14 @@ app.get("/", async (req, res) => {
 app.post("/api/search/v1", async (req, res) => {
   try {
     const { searchText } = req.body;
-
     if (!searchText || searchText.trim() === "") {
       return res.status(400).json({ error: "searchText is required" });
     }
 
     const gptQuery =
       `Act as a Movie Recommendation system and suggest some movies for the query "${searchText}". ` +
-      `Just give me names of 5 movies in the form of an array. ` +
-      `Example Result: Gadar, Sholay, Dangal, MahaAvtar, AdiPurush. ` +
-      `Strictly Need Result in Example Format.`;
+      `Respond ONLY with a valid JSON array of strings. Example: ["Gadar", "Sholay", "Dangal", "MahaAvtar", "AdiPurush"]. ` +
+      `Do not include any explanation or extra text.`;
 
     const results = await client.chat.completions.create({
       model: "gpt-3.5-turbo",
@@ -46,17 +44,24 @@ app.post("/api/search/v1", async (req, res) => {
     });
 
     const content = results.choices[0].message.content;
-    if (!content) {
-      return res.status(404).json({ error: "No results found" });
-    }
-const parsedContent=JSON.parse(content)
-    res.status(200).json({ movies: parsedContent });
 
+    let movies;
+    try {
+      movies = JSON.parse(content); // Try converting string → array
+    } catch {
+      movies = content
+        .replace(/^\[|\]$/g, "")
+        .split(",")
+        .map(m => m.trim().replace(/^"|"$/g, ""));
+    }
+
+    res.status(200).json({ movies });
   } catch (error) {
-    console.error("Error in /api/search/v1:", error.message);
+    console.error("Error:", error.message);
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
 
 app.listen(PORT, () => {
   console.log("App is connected on the PORT: " + PORT);
