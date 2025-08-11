@@ -45,17 +45,15 @@ app.post("/api/search/v1", async (req, res) => {
 
     const content = results.choices[0].message.content;
 
-    let movies;
-    try {
-      movies = JSON.parse(content); // Try converting string → array
-    } catch {
-      movies = content
-        .replace(/^\[|\]$/g, "")
-        .split(",")
-        .map(m => m.trim().replace(/^"|"$/g, ""));
-    }
+  let moviesArray;
+try {
+  moviesArray = JSON.parse(content); // Convert string → array
+} catch (err) {
+  console.error("Invalid JSON from GPT:", content);
+  return res.status(500).json({ error: "Invalid GPT response format" });
+}
 
-    res.status(200).json({ movies });
+res.status(200).json({ movies: moviesArray });
   } catch (error) {
     console.error("Error:", error.message);
     res.status(500).json({ error: "Internal server error" });
