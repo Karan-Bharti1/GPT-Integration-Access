@@ -49,8 +49,8 @@ app.post("/api/search/v1", async (req, res) => {
     if (!content) {
       return res.status(404).json({ error: "No results found" });
     }
-
-    res.status(200).json({ movies: content });
+const parsedContent=JSON.parse(content)
+    res.status(200).json({ movies: parsedContent });
 
   } catch (error) {
     console.error("Error in /api/search/v1:", error.message);
