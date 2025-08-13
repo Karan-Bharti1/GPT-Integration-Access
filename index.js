@@ -14,7 +14,7 @@ const client = new OpenAI({
 });
 
 const corsOptions = {
-  origin: "http://localhost:5173", 
+  origin: ["https://k-flix-git-main-karan-bhartis-projects.vercel.app","https://k-flix-omega.vercel.app"], 
   credentials: true,
   optionsSuccessStatus: 200
 };
