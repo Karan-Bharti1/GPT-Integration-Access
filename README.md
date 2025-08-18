@@ -13,3 +13,12 @@ It provides a secure backend layer to interact with OpenAI’s API without expos
 - REST API endpoints for GPT requests
 - Easy to extend for different models (`gpt-4`, `gpt-3.5-turbo`, etc.)
 
+
+---
+
+## 🌐 Future Enhancements
+
+- ✅ **Support for streaming responses** (real-time text generation)  
+- ✅ **Add rate limiting** for extra security  
+- ✅ **Integration with frontend** (React/Next.js demo)  
+- ✅ **Support for embeddings & fine-tuned models**  
